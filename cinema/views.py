@@ -73,7 +73,6 @@ class MovieViewSet(
     @action(
         methods=["POST"],
         detail=True,
-        permission_classes=(IsAdminUser,),
         url_path="upload-image",
         url_name="upload-image",
     )
@@ -81,7 +80,7 @@ class MovieViewSet(
         """Upload an image to a movie"""
         movie = self.get_object()
         serializer = self.get_serializer(
-            movie, data=request.data
+            instance=movie, data=request.data, partial=True
         )
 
         if serializer.is_valid():
