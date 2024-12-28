@@ -4,6 +4,7 @@ from django.db.models import F, Count
 from rest_framework import viewsets, mixins, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
+from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -129,6 +130,14 @@ class MovieViewSet(
             return MovieImageSerializer
 
         return MovieSerializer
+
+    def create(self, request, *args, **kwargs):
+        if self.action == "list":
+            raise MethodNotAllowed(
+                "POST",
+                detail="Cannot upload an image on the movie list endpoint."
+            )
+        return super().create(request, *args, **kwargs)
 
 
 class MovieSessionViewSet(viewsets.ModelViewSet):
