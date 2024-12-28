@@ -44,7 +44,7 @@ def get_upload_image_path(instance: "Movie", filename: str) -> pathlib.Path:
                 + pathlib.Path(filename).suffix
                 )
 
-    return pathlib.Path("upload_image") / pathlib.Path(filename)
+    return pathlib.Path("upload-image") / pathlib.Path(filename)
 
 
 class Movie(models.Model):

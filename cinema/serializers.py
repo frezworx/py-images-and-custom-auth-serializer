@@ -69,7 +69,8 @@ class MovieDetailSerializer(MovieSerializer):
         model = Movie
         fields = (
             "id", "title", "description", "duration", "genres", "actors",
-            "image")
+            "image"
+        )
 
 
 class MovieSessionSerializer(serializers.ModelSerializer):
@@ -132,7 +133,7 @@ class TicketSeatsSerializer(TicketSerializer):
 
 
 class MovieSessionDetailSerializer(MovieSessionSerializer):
-    movie = MovieListSerializer(many=False, read_only=True)
+    movie = serializers.SerializerMethodField()
     cinema_hall = CinemaHallSerializer(many=False, read_only=True)
     taken_places = TicketSeatsSerializer(
         source="tickets", many=True, read_only=True
@@ -141,6 +142,11 @@ class MovieSessionDetailSerializer(MovieSessionSerializer):
     class Meta:
         model = MovieSession
         fields = ("id", "show_time", "movie", "cinema_hall", "taken_places")
+
+    def get_movie(self, obj):
+        movie_data = MovieListSerializer(obj.movie).data
+        movie_data["movie_image"] = movie_data.pop("image", None)
+        return movie_data
 
 
 class OrderSerializer(serializers.ModelSerializer):
